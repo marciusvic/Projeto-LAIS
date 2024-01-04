@@ -1,0 +1,38 @@
+*{
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+body{
+    background-color: #035C8B;
+}
+
+h2{
+    font-size: 2.5rem;
+    font-weight: 700;
+}
+
+.form-label{
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.form-control{
+    font-size: 1.5rem;
+    width: 130%;
+}
+
+.btn{
+    font-size: 1.5rem;
+    margin-top: 1rem;
+    width: 250px;
+    height: 65px;
+}
+
+.btn-text{
+    margin: 0;
+    font-size: 1.5rem;
+    text-align: center;
+    color: #fff;
+    font-weight: 700;
+}

@@ -1,0 +1,33 @@
+{% extends "usuarios/base.html" %}
+
+{% load static %}
+
+{%block style%} <link rel="stylesheet" href="{% static 'css/usuarios/login/style.css' %}"> {% endblock %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <img src="{% static 'img/usuarios/LAIS-WHO-CC-PT.svg' %}" alt="Logo LAIS" class="img-fluid" style="max-width: 100%; height: auto; width: 80%;">
+            </div>
+            <div class="col-md-6 d-flex align-items-center">
+                <div>
+                    <h2 class="text-white">LOGIN</h2>
+                    <div class="mb-3">
+                        <label for="cpf" class="form-label text-white">CPF</label>
+                        <input type="text" class="form-control rounded-pill py-3"" id="cpf" name="cpf" placeholder="000.000.000-00">
+                    </div>
+                    <div class="mb-3">
+                        <label for="senha" class="form-label text-white">SENHA</label>
+                        <input type="password" class="form-control rounded-pill py-3"" id="senha" name="senha" placeholder="********">
+                    </div>
+                    <button class="btn btn-dark rounded-pill">
+                        <p class="btn-text">ENTRAR</p>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
