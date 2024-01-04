@@ -1,0 +1,43 @@
+/* Estilo de templates/usuarios/home.html */
+*{
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+body{
+    background-color: #035C8B;
+}
+
+a {
+    text-decoration: none;
+    color: #fff;
+    font-weight: 700;
+}
+
+a:hover {
+    text-decoration: underline;
+    color: #fff;
+}
+
+.text{
+    font-size: 5rem;
+    font-weight: 600;
+    color: #fff;
+}
+
+.navbar-brand img {
+    width: 100px;
+    height: auto;
+}
+
+.nav-item{
+    font-size: 1.2rem;
+    color: #fff;
+    margin-left: 20px;
+}
+
+.btn{
+    margin-top: 40px;
+    font-weight: 700;
+    font-size: 3rem;
+}
