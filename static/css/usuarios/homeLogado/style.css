@@ -7,39 +7,49 @@ body{
     background-color: #035C8B;
 }
 
-h1{
+.text-title{
+    margin: 0;
+    font-size: 5rem;
+    font-weight: 580;
     color: #fff;
-    font-size: 4rem;
-    font-weight: 700;
 }
 
-.form-label{
-    margin-top: 1rem;
-    font-size: 1.5rem;
-    font-weight: 700;
+.text-title-outro{
+    margin-top: 22px;
+    font-size: 3rem;
+    font-weight: 600;
+    color: #fff;
 }
 
-.form-control{
-    font-size: 1.5rem;
-    width: 130%;
-}
-
-.form-select{
-    font-size: 1.5rem;
-    width: 130%;
+.text{
+    font-size: 2.5rem;
+    font-weight: 600;
+    color: #fff;
 }
 
 .btn{
     font-size: 1.5rem;
     margin-top: 2.5rem;
-    width: 250px;
-    height: 65px;
+    width: 450px;
+    height: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #002A40;
+}
+
+.btn-link{
+    text-decoration: none;
+    font-weight: 700;
+}
+.btn-link:hover{
+    text-decoration: none;
+    font-weight: 700;
 }
 
 .btn-text{
     margin: 0;
-    font-size: 1.5rem;
-    text-align: center;
+    font-size: 2rem;
     color: #fff;
     font-weight: 700;
 }

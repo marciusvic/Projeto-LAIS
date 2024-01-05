@@ -13,3 +13,6 @@ def cadastrar(request):
 
 def agendamento(request):
     return render(request, 'usuarios/agendamento.html')
+
+def homeLogado(request):
+    return render(request, 'usuarios/homeLogado.html')

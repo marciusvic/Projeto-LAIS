@@ -1,0 +1,34 @@
+{% extends "usuarios/base.html" %}
+
+{% load static %}
+
+{% block style %}
+  <link rel="stylesheet" href="{% static 'css/usuarios/homeLogado/style.css' %}">
+{% endblock %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+  <div class="container">
+    <button class="btn-sair">Sair</button>
+    <div class="row">
+      <div class="col-md-6">
+        <h2 class="text-title">Agendamento online para triagem de detecção da covid-19 e suas variantes</h2>
+      </div>
+      <div class="col-md-6">
+        <div>
+          <h2 class="text-title-outro">Bem-vindo</h2>
+          <p class="text">Nome:</p>
+          <p class="text">Data de nascimento</p>
+          <p class="text">CPF:</p>
+          <p class="text">Agendamento:</p>
+          <button class="btn btn-dark rounded-pill">
+            <a class="btn-link" href="/agendamento">
+              <p class="btn-text">REALIZAR AGENDAMENTO</p>
+            </a>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
