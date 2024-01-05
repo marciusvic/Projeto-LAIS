@@ -7,3 +7,9 @@ def home(request):
 
 def login(request):
     return render(request, 'usuarios/login.html')
+
+def cadastrar(request):
+    return render(request, 'usuarios/cadastrar.html')
+
+def agendamento(request):
+    return render(request, 'usuarios/agendamento.html')

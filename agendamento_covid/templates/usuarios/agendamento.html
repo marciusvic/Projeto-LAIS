@@ -1,0 +1,28 @@
+{% extends "usuarios/base.html" %}
+
+{% load static %}
+
+{% block style %}
+  <link rel="stylesheet" href="{% static 'css/usuarios/agendamento/style.css' %}">
+{% endblock %}
+
+{% block title %}Agendamento{% endblock %}
+
+{% block content %}
+  <div class="container">
+    <h1>Realize seu agendamento</h1>
+    <div class="col-md-6">
+      <label for="estabelecimento" class="form-label text-white">ESTABELECIMENTO DE SAÚDE</label>
+      <select class="form-select rounded-pill py-3" id="estabelecimento" name="estabelecimento">
+        <option value="">Selecione o estabelecimento</option>
+        
+      </select>
+
+      <label for="data_e_hora" class="form-label text-white">DATA E HORA</label>
+      <input type="datetime-local" class="form-control rounded-pill py-3" id="data_e_hora" name="data_e_hora">
+      <button class="btn btn-dark rounded-pill">
+        <p class="btn-text">AGENDAR</p>
+      </button>
+    </div>
+  </div>
+{% endblock %}
