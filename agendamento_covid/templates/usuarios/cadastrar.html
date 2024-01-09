@@ -21,14 +21,13 @@
           <input type="text" class="form-control rounded-pill py-3" id="cpf" name="cpf" placeholder="000.000.000-00">
 
           <label for="date_nascimento" class="form-label text-white">DATA DE NASCIMENTO</label>
-          <input type="date" class="form-control rounded-pill py-3" id="date_nascimento" name="date_nascimento"
-            placeholder="DD/MM/AAAA">
-
+          <input type="date" class="form-control rounded-pill py-3" id="date_nascimento" name="date_nascimento">
           <label for="grupo" class="form-label text-white">GRUPO</label>
           <select class="form-select rounded-pill py-4" id="grupo" name="grupo">
             <option value="">Selecione uma opção</option>
-            <option value="opcao1">Opção 1</option>
-            <option value="opcao2">Opção 2</option>
+            {% for grupo in grupos %}
+              <option value="{{ grupo.nome }}">{{ grupo.nome }}</option>
+            {% endfor %}
           </select>
         </div>
         <div class="col-md-4 offset-md-4">
