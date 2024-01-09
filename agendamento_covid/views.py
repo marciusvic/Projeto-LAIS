@@ -31,7 +31,9 @@ def cadastrar(request):
         if cpf == '' or cpf == None or len(cpf) != 14:
             return HttpResponse('CPF inválido, você deve coloca-lo no formato xxx.xxx.xxx-xx!')
         
-        return HttpResponse(date_nascimento)
+        user = User.objects.create_user(nome=nome, cpf=cpf, date_nascimento=date_nascimento, grupo=grupo, covid_30_dias=covid_30_dias, email=email, senha=senha)
+        user.save()
+        return HttpResponse('Usuário cadastrado com sucesso!')
 
 def agendamento(request):
     return render(request, 'usuarios/agendamento.html')
