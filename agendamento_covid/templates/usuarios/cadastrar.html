@@ -10,43 +10,46 @@
 
 {% block content %}
   <div class="container">
-    <div class="row">
-      <div class="col-md-4">
-        <label for="nome" class="form-label text-white">NOME COMPLETO</label>
-        <input type="text" class="form-control rounded-pill py-3" id="nome" name="nome" placeholder="Seu nome">
+    <form action="{% url 'cadastrar' %}" method="POST">
+      {% csrf_token %}
+      <div class="row">
+        <div class="col-md-4">
+          <label for="nome" class="form-label text-white">NOME COMPLETO</label>
+          <input type="text" class="form-control rounded-pill py-3" id="nome" name="nome" placeholder="Seu nome">
 
-        <label for="cpf" class="form-label text-white">CPF</label>
-        <input type="text" class="form-control rounded-pill py-3" id="cpf" name="cpf" placeholder="000.000.000-00">
+          <label for="cpf" class="form-label text-white">CPF</label>
+          <input type="text" class="form-control rounded-pill py-3" id="cpf" name="cpf" placeholder="000.000.000-00">
 
-        <label for="date_nascimento" class="form-label text-white">DATA DE NASCIMENTO</label>
-        <input type="date" class="form-control rounded-pill py-3" id="date_nascimento" name="date_nascimento"
-          placeholder="DD/MM/AAAA">
+          <label for="date_nascimento" class="form-label text-white">DATA DE NASCIMENTO</label>
+          <input type="date" class="form-control rounded-pill py-3" id="date_nascimento" name="date_nascimento"
+            placeholder="DD/MM/AAAA">
 
-        <label for="grupo" class="form-label text-white">GRUPO</label>
-        <select class="form-select rounded-pill py-4" id="grupo" name="grupo">
-          <option value="">Selecione uma opção</option>
-          <option value="opcao1">Opção 1</option>
-          <option value="opcao2">Opção 2</option>
-        </select>
+          <label for="grupo" class="form-label text-white">GRUPO</label>
+          <select class="form-select rounded-pill py-4" id="grupo" name="grupo">
+            <option value="">Selecione uma opção</option>
+            <option value="opcao1">Opção 1</option>
+            <option value="opcao2">Opção 2</option>
+          </select>
+        </div>
+        <div class="col-md-4 offset-md-4">
+          <label for="covid_30_dias" class="form-label text-white">POSITIVO PARA COVID RECENTE</label>
+          <select class="form-select rounded-pill py-3" id="covid_30_dias" name="covid_30_dias">
+            <option value="">Selecione uma opção</option>
+            <option value="true">Tive COVID nos últimos 30 dias</option>
+            <option value="false">Não tive COVID nos últimos 30 dias</option>
+          </select>
+
+          <label for="senha" class="form-label text-white">SENHA</label>
+          <input type="password" class="form-control rounded-pill py-3" id="senha" name="senha" placeholder="Sua senha">
+
+          <label for="confirma_senha" class="form-label text-white">CONFIRMAR SENHA</label>
+          <input type="password" class="form-control rounded-pill py-3" id="confirma_senha" name="confirma_senha"
+            placeholder="Confirme sua senha">
+          <button type="submit" class="btn btn-dark rounded-pill">
+            <span class="btn-text">CADASTRAR</span>
+          </button>
+        </div>
       </div>
-      <div class="col-md-4 offset-md-4">
-        <label for="covid_30_dias" class="form-label text-white">POSITIVO PARA COVID RECENTE</label>
-        <select class="form-select rounded-pill py-3" id="covid_30_dias" name="covid_30_dias">
-          <option value="">Selecione uma opção</option>
-          <option value="true">Tive COVID nos últimos 30 dias</option>
-          <option value="false">Não tive COVID nos últimos 30 dias</option>
-        </select>
-
-        <label for="senha" class="form-label text-white">SENHA</label>
-        <input type="password" class="form-control rounded-pill py-3" id="senha" name="senha" placeholder="Sua senha">
-
-        <label for="confirma_senha" class="form-label text-white">CONFIRMAR SENHA</label>
-        <input type="password" class="form-control rounded-pill py-3" id="confirma_senha" name="confirma_senha"
-          placeholder="Confirme sua senha">
-        <button class="btn btn-dark rounded-pill">
-          <p class="btn-text">CADASTRAR</p>
-        </button>
-      </div>
-    </div>
+    </form>
   </div>
 {% endblock %}
