@@ -17,14 +17,14 @@
       </div>
       <div class="col-md-6">
         <div>
-          <h2 class="text-title-outro">Bem-vindo</h2>
-          <p class="text">Nome:</p>
-          <p class="text">Data de nascimento</p>
-          <p class="text">CPF:</p>
+          <h2 class="text-title-outro">Bem-vindo {{ request.user.nome }}</h2>
+          <p class="text">Nome: {{ request.user.nome.split.0 }}</p>
+          <p class="text">Data de nascimento: {{ request.user.date_nascimento }}</p>
+          <p class="text">CPF: {{ request.user.cpf }}</p>
           <p class="text">Agendamento:</p>
           <button class="btn btn-dark rounded-pill">
             <a class="btn-link" href="/agendamento">
-              <p class="btn-text">REALIZAR AGENDAMENTO</p>
+              <span class="btn-text">REALIZAR AGENDAMENTO</span>
             </a>
           </button>
         </div>
