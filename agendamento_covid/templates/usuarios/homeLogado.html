@@ -10,23 +10,35 @@
 
 {% block content %}
   <div class="container">
-    <button class="btn-sair">Sair</button>
+    <form action="{% url 'logout' %}" method="POST">
+      {% csrf_token %}
+      <button class="btn-sair">Sair</button>
+    </form>
     <div class="row">
       <div class="col-md-6">
         <h2 class="text-title">Agendamento online para triagem de detecção da covid-19 e suas variantes</h2>
       </div>
       <div class="col-md-6">
         <div>
-          <h2 class="text-title-outro">Bem-vindo {{ request.user.nome }}</h2>
-          <p class="text">Nome: {{ request.user.nome.split.0 }}</p>
-          <p class="text">Data de nascimento: {{ request.user.date_nascimento }}</p>
-          <p class="text">CPF: {{ request.user.cpf }}</p>
+          <h2 class="text-title-outro">Bem-vindo {{ request.user.nome.split.0.capitalize }}</h2>
+          <p class="text">Nome: {{ request.user.nome }}</p>
+          <p class="text">Data de nascimento: {{ request.user.date_nascimento|date:"d/m/Y" }}</p>
+          <p class="text">CPF: {{ request.user.cpf|stringformat:"03s"|slice:":3" }}.{{ request.user.cpf|stringformat:"03s"|slice:"3:6" }}.{{ request.user.cpf|stringformat:"03s"|slice:"6:9" }}-{{ request.user.cpf|stringformat:"02s"|slice:"9:" }}</p>
+          {% if user_apto %}
           <p class="text">Agendamento:</p>
           <button class="btn btn-dark rounded-pill">
             <a class="btn-link" href="/agendamento">
               <span class="btn-text">REALIZAR AGENDAMENTO</span>
             </a>
           </button>
+          {% else %}
+          <p class="text">Agendamento:</p>
+          <button class="btn btn-dark rounded-pill" disabled>
+            <a class="btn-link">
+              <span class="btn-text">NÃO ESTÁ APTO PARA AGENDAMENTO</span>
+            </a>
+          </button>
+          {% endif %}
         </div>
       </div>
     </div>

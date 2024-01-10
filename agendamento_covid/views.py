@@ -9,9 +9,13 @@ from agendamento_covid.funcoes import validar_idade, validar_cpf_digitos, valida
 
 def home(request):
     if request.user.is_authenticated:
-        return render(request, 'usuarios/homeLogado.html')
+        return render(request, 'usuarios/homeLogado.html', {'user_apto': request.user.apto})
     else:
         return render(request, 'usuarios/home.html')
+
+def logout_view(request):
+    logout(request)
+    return redirect('/')
 
 def login(request):
     if request.method == 'GET':
