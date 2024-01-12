@@ -9,3 +9,9 @@ class CustomUser(AbstractUser):
     grupo = models.CharField(max_length=100, blank=False, null=False)
     covid_30_dias = models.BooleanField(default=False)
     apto = models.BooleanField(default=False, blank=False, null=False)
+
+class Agendamento(models.Model):
+    id_usuario = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    data_agendamento = models.DateField()
+    hora_agendamento = models.TimeField()
+    cod_unidade = models.CharField(max_length=255)

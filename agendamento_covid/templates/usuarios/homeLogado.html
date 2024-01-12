@@ -25,6 +25,7 @@
           <p class="text">Data de nascimento: {{ request.user.date_nascimento|date:"d/m/Y" }}</p>
           <p class="text">CPF: {{ request.user.cpf|stringformat:"03s"|slice:":3" }}.{{ request.user.cpf|stringformat:"03s"|slice:"3:6" }}.{{ request.user.cpf|stringformat:"03s"|slice:"6:9" }}-{{ request.user.cpf|stringformat:"02s"|slice:"9:" }}</p>
           {% if user_apto %}
+          <p class="text">Apto para agendamento: APTO</p>
           <p class="text">Agendamento:</p>
           <button class="btn btn-dark rounded-pill">
             <a class="btn-link" href="/agendamento">
@@ -32,6 +33,7 @@
             </a>
           </button>
           {% else %}
+          <p class="text">Apto para agendamento: INAPTO</p>
           <p class="text">Agendamento:</p>
           <button class="btn btn-dark rounded-pill" disabled>
             <a class="btn-link">

@@ -24,3 +24,11 @@ def criar_username(nome, cpf):
     nome = nome.split()[0]
     username = nome + cpf
     return username
+
+def obter_estabelecimento_cod_unidade(estabelecimentos, estabelecimentoCodUnidade):
+    estabelecimento = None
+    for estab in estabelecimentos:
+        if int(estab.co_unidade) == int(estabelecimentoCodUnidade):
+            estabelecimento = estab
+            return estabelecimento
+    return estabelecimento

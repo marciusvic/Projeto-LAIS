@@ -1,0 +1,57 @@
+{% extends "usuarios/base.html" %}
+
+{% load static %}
+
+{% block style %}
+  <link rel="stylesheet" href="{% static 'css/usuarios/selecionar_horario/style.css' %}">
+{% endblock %}
+
+{% block title %}Agendamento{% endblock %}
+
+{% block content %}
+  <div class="container">
+    <form action="{% url 'logout' %}" method="POST">
+      {% csrf_token %}
+      <button class="btn-sair">Sair</button>
+    </form>
+    <h1>Realize seu agendamento</h1>
+    <div class="row">
+      <div class="col-md-6">
+        <h2>Estabelecimento de saúde: {{ estabelecimento.no_fantasia }}, CNES: {{ estabelecimento.co_cnes }}</h2>
+        <h2>Endereço: {{ estabelecimento.no_logradouro }}, {{ estabelecimento.nu_endereco }}, {{ estabelecimento.no_bairro }}, {{ estabelecimento.co_cep }}</h2>
+        <h2>Data: {{ data }}</h2>
+      </div>
+      <div class="col-md-6">
+        <h2>Horários disponíveis:</h2>
+        <div class="row">
+          <form action="{% url 'selecionar_horario' cod_unidade=estabelecimento.co_unidade data=data %}" method="POST">
+            {% csrf_token %}
+          <div class="col-md-12">
+            <input type="radio" name="horario" value="13:00" class="btn-horario">
+            <span class="span-text">13h - {{ horarios.0 }} vagas</span>
+          </div>
+          <div class="col-md-12">
+            <input type="radio" name="horario" value="14:00" class="btn-horario">
+            <span class="span-text">14h - {{ horarios.1 }} vagas</span>
+          </div>
+          <div class="col-md-12">
+            <input type="radio" name="horario" value="15:00" class="btn-horario">
+            <span class="span-text">15h - {{ horarios.2 }} vagas</span>
+          </div>
+          <div class="col-md-12">
+            <input type="radio" name="horario" value="16:00" class="btn-horario">
+            <span class="span-text">16h - {{ horarios.3 }} vagas</span>
+          </div>
+          <div class="col-md-12">
+            <input type="radio" name="horario" value="17:00" class="btn-horario">
+            <span class="span-text">17h - {{ horarios.4 }} vagas</span>
+          </div>
+          <button type="submit" class="btn btn-dark rounded-pill">
+            <span class="btn-text">AGENDAR</span>
+          </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

@@ -12,6 +12,13 @@
   <div class="container">
     <form action="{% url 'cadastrar' %}" method="POST">
       {% csrf_token %}
+      
+      {% if error_message %}
+        <div class="alert alert-danger">
+            {{ error_message }}
+        </div>
+      {% endif %}
+
       <div class="row">
         <div class="col-md-4">
           <label for="nome" class="form-label text-white">NOME COMPLETO</label>
