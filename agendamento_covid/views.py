@@ -4,6 +4,7 @@ from agendamento_covid.models import CustomUser, Agendamento
 from django.contrib.auth import authenticate, logout
 from django.contrib.auth import login as auth_login
 from django.contrib.auth.decorators import login_required
+from datetime import datetime
 from agendamento_covid.grupos import obter_grupos
 from agendamento_covid.estabelecimentos import obter_estabelecimentos
 from agendamento_covid.funcoes import validar_idade, validar_cpf_digitos, validar_cpf_tamanho, verificar_apto, criar_username, obter_estabelecimento_cod_unidade
@@ -41,7 +42,6 @@ def cadastrar(request):
         context = {
             'grupos': lista_grupos
         }
-        print(lista_grupos)
         return render(request, 'usuarios/cadastrar.html', context)
     else:
         nome = request.POST.get('nome')
@@ -89,10 +89,19 @@ def cadastrar(request):
 
 @login_required(login_url='/')
 def agendamento(request):
+    estabelecimentos = obter_estabelecimentos()
     if request.method == 'GET':
-        estabelecimentos = obter_estabelecimentos()
         return render(request, 'usuarios/agendamento.html', {'estabelecimentos': estabelecimentos})
     else:
+        if request.POST.get('estabelecimento') == '':
+            return render(request, 'usuarios/agendamento.html', {'error_message': 'Selecione um estabelecimento!', 'estabelecimentos': estabelecimentos})
+        if request.POST.get('data') == None:
+            return render(request, 'usuarios/agendamento.html', {'error_message': 'Selecione uma data!', 'estabelecimentos': estabelecimentos})
+        if request.POST.get('data') <= str(datetime.today().date()):
+            return render(request, 'usuarios/agendamento.html', {'error_message': 'Agendamentos só podem ser realizados para datas futuras. Selecione uma data válida!', 'estabelecimentos': estabelecimentos})
+        data_agendamento = datetime.strptime(request.POST.get('data'), '%Y-%m-%d').date()
+        if not (1 < data_agendamento.weekday() < 6):
+            return render(request, 'usuarios/agendamento.html', {'error_message': 'Agendamentos só podem ser realizados de quarta-feira a sábado. Selecione uma data válida!', 'estabelecimentos': estabelecimentos})
         estabelecimentos = obter_estabelecimentos()
         estabelecimentoCodUnidade = request.POST.get('estabelecimento')
         data = request.POST.get('data')
@@ -101,35 +110,55 @@ def agendamento(request):
 
 @login_required(login_url='/')
 def selecionar_horario(request, cod_unidade=None, data=None):
+    estabelecimentos = obter_estabelecimentos()
+    estabelecimento = obter_estabelecimento_cod_unidade(estabelecimentos, cod_unidade)
+    horarios = [5, 5, 5, 5, 5]
+    vagas = Agendamento.objects.filter(data_agendamento=data, cod_unidade=cod_unidade)
+    for vaga in vagas:
+        hora_agendamento = vaga.hora_agendamento.strftime('%H:%M:%S')
+        if hora_agendamento.startswith('13:00'):
+            horarios[0] -= 1
+        elif hora_agendamento.startswith('14:00'):
+            horarios[1] -= 1
+        elif hora_agendamento.startswith('15:00'):
+            horarios[2] -= 1
+        elif hora_agendamento.startswith('16:00'):
+            horarios[3] -= 1
+        elif hora_agendamento.startswith('17:00'):
+            horarios[4] -= 1
     if request.method == 'GET':
-        estabelecimentos = obter_estabelecimentos()
-        estabelecimento = obter_estabelecimento_cod_unidade(estabelecimentos, cod_unidade)
-        horarios = [5, 5, 5, 5, 5]
-        vagas = Agendamento.objects.filter(data_agendamento=data, cod_unidade=cod_unidade)
-        for vaga in vagas:
-            hora_agendamento = vaga.hora_agendamento.strftime('%H:%M:%S')
-            if hora_agendamento.startswith('13:00'):
-                horarios[0] -= 1
-            elif hora_agendamento.startswith('14:00'):
-                horarios[1] -= 1
-            elif hora_agendamento.startswith('15:00'):
-                horarios[2] -= 1
-            elif hora_agendamento.startswith('16:00'):
-                horarios[3] -= 1
-            elif hora_agendamento.startswith('17:00'):
-                horarios[4] -= 1
         return render(request, 'usuarios/selecionar_horario.html', {'estabelecimento': estabelecimento, 'data': data, 'horarios': horarios})
     else:
         horario = request.POST.get('horario')
-        usuarioAgendado = Agendamento.objects.filter(id_usuario=request.user.id, data_agendamento=data).exists()
-        if usuarioAgendado:
-            return HttpResponse('Usuário já possui agendamento para esta data!')
+        print(horario)
+        usuarioAgendado = Agendamento.objects.filter(id_usuario=request.user.id,
+                                                     data_agendamento=data).exists()
         
+        Agendamentos = Agendamento.objects.filter(data_agendamento=data,
+                                                  cod_unidade=cod_unidade,
+                                                  hora_agendamento=horario).count()
+        idade = validar_idade(str(request.user.date_nascimento))
+        if usuarioAgendado:
+            return render(request, 'usuarios/agendamento.html', {'error_message': 'Você já possui um agendamento para esta data, cada pessoa só pode ter um agendamento por vez!', 'estabelecimentos': estabelecimentos})
+        if Agendamentos >= 5:
+            return render(request, 'usuarios/agendamento.html', {'error_message': 'Horário indisponível, selecione outro horário!', 'estabelecimentos': estabelecimentos})
+        if horario == None:
+            return render(request, 'usuarios/selecionar_horario.html', {'error_message': 'Selecione um horário!', 'estabelecimento': estabelecimento, 'data': data, 'horarios': horarios})
+        
+        if (idade <= 17 or idade >= 30) and str(horario) == '13:00':
+            return render(request, 'usuarios/selecionar_horario.html', {'error_message': 'Horário indisponível para sua idade, o horário das 13:00 só está disponível para pessoas entre 18 a 29 anos', 'estabelecimento': estabelecimento, 'data': data, 'horarios': horarios})
+        if (idade <= 29 or idade >= 40) and str(horario) == '14:00':
+            return render(request, 'usuarios/selecionar_horario.html', {'error_message': 'Horário indisponível para sua idade, o horário das 14:00 só está disponível para pessoas entre 30 a 39 anos', 'estabelecimento': estabelecimento, 'data': data, 'horarios': horarios})
+        if (idade <= 39 or idade >= 50) and str(horario) == '15:00':
+            return render(request, 'usuarios/selecionar_horario.html', {'error_message': 'Horário indisponível para sua idade, o horário das 15:00 só está disponível para pessoas entre 40 a 49 anos', 'estabelecimento': estabelecimento, 'data': data, 'horarios': horarios})
+        if (idade <= 49 or idade >= 60) and str(horario) == '16:00':
+            return render(request, 'usuarios/selecionar_horario.html', {'error_message': 'Horário indisponível para sua idade, o horário das 16:00 só está disponível para pessoas entre 50 a 59 anos', 'estabelecimento': estabelecimento, 'data': data, 'horarios': horarios})
+        if idade > 59 and str(horario) == '17:00':
+            return render(request, 'usuarios/selecionar_horario.html', {'error_message': 'Horário indisponível para sua idade, o horário das 17:00 só está disponível para pessoas com 60 anos ou mais', 'estabelecimento': estabelecimento, 'data': data, 'horarios': horarios})
         
         agendamento = Agendamento.objects.create(id_usuario=request.user,
                                                  data_agendamento=data,
                                                  hora_agendamento=horario,
                                                  cod_unidade=cod_unidade)
         agendamento.save()
-
         return redirect('/')

@@ -14,6 +14,11 @@
       {% csrf_token %}
       <button class="btn-sair">Sair</button>
     </form>
+    {% if error_message %}
+        <div class="alert alert-danger">
+            {{ error_message }}
+        </div>
+    {% endif %}
     <form action="{% url 'agendamento' %}" method="POST">
       {% csrf_token %}
       <h1>Realize seu agendamento</h1>
