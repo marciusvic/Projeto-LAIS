@@ -8,6 +8,7 @@ from datetime import datetime
 from agendamento_covid.grupos import obter_grupos
 from agendamento_covid.estabelecimentos import obter_estabelecimentos
 from agendamento_covid.funcoes import validar_idade, validar_cpf_digitos, validar_cpf_tamanho, verificar_apto, criar_username, obter_estabelecimento_cod_unidade
+from django.utils import timezone
 
 def home(request):
     if request.user.is_authenticated:
@@ -37,12 +38,9 @@ def logout_view(request):
     return redirect('/')
 
 def cadastrar(request):
+    grupos = obter_grupos()
     if request.method == 'GET':
-        lista_grupos = obter_grupos()
-        context = {
-            'grupos': lista_grupos
-        }
-        return render(request, 'usuarios/cadastrar.html', context)
+        return render(request, 'usuarios/cadastrar.html', {'grupos': grupos})
     else:
         nome = request.POST.get('nome')
         cpf = request.POST.get('cpf')
@@ -54,24 +52,26 @@ def cadastrar(request):
 
         if verificar_apto(grupo, covid_30_dias, validar_idade(date_nascimento)):
             apto = True
+        else:
+            apto = False
 
         cpf = request.POST.get('cpf')
         cpf_existe = CustomUser.objects.filter(cpf=cpf).exists()
         if cpf_existe:
             error_message = 'CPF já cadastrado!'
-            return render(request, 'usuarios/cadastrar.html', {'error_message': error_message})
+            return render(request, 'usuarios/cadastrar.html', {'error_message': error_message, 'grupos': grupos})
         if not validar_cpf_tamanho(cpf):
             error_message = 'CPF inválido, você deve coloca-lo no formato xxx.xxx.xxx-xx!'
-            return render(request, 'usuarios/cadastrar.html', {'error_message': error_message})
+            return render(request, 'usuarios/cadastrar.html', {'error_message': error_message, 'grupos': grupos})
         if not validar_cpf_digitos(cpf):
             error_message = 'CPF inválido, o CPF deve ser composto apenas de números, no formato 00000000000!'
-            return render(request, 'usuarios/cadastrar.html', {'error_message': error_message})
+            return render(request, 'usuarios/cadastrar.html', {'error_message': error_message, 'grupos': grupos})
         if validar_idade(date_nascimento) > 110 or validar_idade(date_nascimento) < 0:
             error_message = 'Data de nascimento inválida!'
-            return render(request, 'usuarios/cadastrar.html', {'error_message': error_message})
+            return render(request, 'usuarios/cadastrar.html', {'error_message': error_message, 'grupos': grupos})
         if senha != confirma_senha:
             error_message = 'Senhas não conferem!'
-            return render(request, 'usuarios/cadastrar.html', {'error_message': error_message})
+            return render(request, 'usuarios/cadastrar.html', {'error_message': error_message, 'grupos': grupos})
         
         user = CustomUser.objects.create_user(username=criar_username(nome, cpf),
                                               nome=nome, cpf=cpf,
@@ -82,10 +82,10 @@ def cadastrar(request):
                                               apto=apto)
         user.save()
         
-        if user.apto:
-            return HttpResponse('Usuário cadastrado com sucesso!')
+        if user.apto == True:
+            return render(request, 'usuarios/login.html', {'success_message': 'Usuário cadastrado com sucesso!'})
         else:
-            return HttpResponse('Usuário cadastrado com sucesso, porém não está apto para receber a vacina!')
+            return render(request, 'usuarios/login.html', {'success_message': 'Usuário cadastrado com sucesso, porém não está apto para receber a vacina!'})
 
 @login_required(login_url='/')
 def agendamento(request):
@@ -130,7 +130,6 @@ def selecionar_horario(request, cod_unidade=None, data=None):
         return render(request, 'usuarios/selecionar_horario.html', {'estabelecimento': estabelecimento, 'data': data, 'horarios': horarios})
     else:
         horario = request.POST.get('horario')
-        print(horario)
         usuarioAgendado = Agendamento.objects.filter(id_usuario=request.user.id,
                                                      data_agendamento=data).exists()
         
@@ -162,3 +161,33 @@ def selecionar_horario(request, cod_unidade=None, data=None):
                                                  cod_unidade=cod_unidade)
         agendamento.save()
         return redirect('/')
+    
+@login_required(login_url='/')
+def listar_agendamentos(request):
+    estabelecimentos = obter_estabelecimentos()
+    agendamentos = Agendamento.objects.filter(id_usuario=request.user.id)
+    infos_agendamentos = []
+    for agendamento in agendamentos:
+        data_agendamento = agendamento.data_agendamento
+        hora_agendamento = agendamento.hora_agendamento
+
+        agora = timezone.now().astimezone().replace(microsecond=0)
+        
+        if data_agendamento > agora.date() or (data_agendamento == agora.date() and hora_agendamento > agora.time()):
+            infos_agendamentos.append({
+                'data': data_agendamento.strftime('%Y-%m-%d'),
+                'hora': hora_agendamento.strftime('%H:%M:%S'),
+                'estabelecimento': obter_estabelecimento_cod_unidade(estabelecimentos, agendamento.cod_unidade),
+                'ja_realizado': False
+            })
+        else:
+            infos_agendamentos.append({
+                'data': data_agendamento.strftime('%Y-%m-%d'),
+                'hora': hora_agendamento.strftime('%H:%M:%S'), 
+                'estabelecimento': obter_estabelecimento_cod_unidade(estabelecimentos, agendamento.cod_unidade),
+                'dia_semana': data_agendamento.strftime('%A'),
+                'ja_realizado': True
+            })
+
+    return render(request, 'usuarios/listar_agendamentos.html', {'infos_agendamentos': infos_agendamentos})
+

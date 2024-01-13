@@ -1,0 +1,44 @@
+*{
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+body{
+    background-color: #035C8B;
+}
+
+h2{
+    margin: 0;
+    font-size: 3rem;
+    font-weight: 580;
+    color: #fff;
+}
+
+hr{
+    background-color: #ccc;
+}
+
+.text{
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #fff;
+}
+
+.btn-sair {
+    position: fixed;
+    top: 30px;
+    right: 30px;
+    font-size: 1.5rem;
+    width: 100px;
+    height: 40px;
+    background-color: #AF0000;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.btn-sair:hover {
+    background-color: #920000;
+    color: #fff;
+}

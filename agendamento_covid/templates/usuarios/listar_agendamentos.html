@@ -1,0 +1,39 @@
+{% extends "usuarios/base.html" %}
+
+{% load static %}
+
+{%block style%} <link rel="stylesheet" href="{% static 'css/usuarios/listar_agendamentos/style.css' %}"> {% endblock %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <form action="{% url 'logout' %}" method="POST">
+            {% csrf_token %}
+            <button class="btn-sair">Sair</button>
+        </form>
+        <div>
+            <h2>Lista/Histórico de agendamentos</h2>
+            <div>
+                <div>
+                    <hr class="my-4">
+                    {% for info in infos_agendamentos %}
+                        <div class="infos">
+                            <p class="text">Data e Hora: {{ info.data }} {{ info.hora}}</p>
+                            <p class="text">Dia da semana: {{ info.dia_semana }}</p>
+                            <p class="text">Estabelecimento: {{ info.estabelecimento.co_unidade }} - {{ info.estabelecimento.no_fantasia }}</p>
+                            {% if info.ja_realizado %}
+                                <p class="text text-success">Agendamento já realizado</p>
+                            {% else %}
+                                <p class="text text-warning">Agendamento ainda não realizado</p>
+                            {% endif %}
+                        </div>
+                        {% if not forloop.last %}
+                            <hr class="my-4">
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
