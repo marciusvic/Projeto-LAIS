@@ -61,7 +61,7 @@ def cadastrar(request):
             error_message = 'CPF já cadastrado!'
             return render(request, 'usuarios/cadastrar.html', {'error_message': error_message, 'grupos': grupos})
         if not validar_cpf_tamanho(cpf):
-            error_message = 'CPF inválido, você deve coloca-lo no formato xxx.xxx.xxx-xx!'
+            error_message = 'CPF inválido, você deve coloca-lo no formato 00000000000!'
             return render(request, 'usuarios/cadastrar.html', {'error_message': error_message, 'grupos': grupos})
         if not validar_cpf_digitos(cpf):
             error_message = 'CPF inválido, o CPF deve ser composto apenas de números, no formato 00000000000!'
