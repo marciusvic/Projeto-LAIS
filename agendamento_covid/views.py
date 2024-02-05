@@ -46,7 +46,8 @@ def cadastrar(request):
         cpf = request.POST.get('cpf')
         date_nascimento = request.POST.get('date_nascimento')
         grupo = request.POST.get('grupo')
-        covid_30_dias = request.POST.get('covid_30_dias')
+        covid_30_dias_str = request.POST.get('covid_30_dias')
+        covid_30_dias = bool(covid_30_dias_str)
         senha = request.POST.get('senha')
         confirma_senha = request.POST.get('confirma_senha')
 
